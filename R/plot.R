@@ -95,7 +95,7 @@ plot_function = function(.f, lower, upper, derivative = FALSE, optimize = FALSE,
     data = mutate(data, derivative = fprime(x))
     p = ggplot(data = data, aes(x=x, y = derivative)) +
       geom_hline(yintercept = 0, color = l$hline_color) +
-      geom_line(size = l$size, color = l$color) +
+      geom_line(size = 1, color = l$color) #+
       labs(x = bquote(italic(x)), y = expression(over(df, dx)),
            subtitle = "First derivative",
            title =  parse(text = paste0("f(x) == ", deparse(.f)[2]))) +

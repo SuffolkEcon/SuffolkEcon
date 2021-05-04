@@ -10,12 +10,13 @@ Encoding: UTF-8
 LazyData: true
 Depends: 
     R (>= 3.6),
+    Deriv,
     dplyr,
     ggplot2,
-    stringr,
     patchwork,
     rlang,
-    rootSolve
+    rootSolve,
+    stringr
 Suggests: 
     knitr,
     rmarkdown
