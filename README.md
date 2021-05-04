@@ -1,6 +1,6 @@
 # `SuffolkEcon`
 
-`SuffolkEcon` is an experimental R package for the Department of Economics at Suffolk University to help teach introductory concepts in statistics, econometrics and optimization.
+`SuffolkEcon` is an experimental R package for the Department of Economics at Suffolk University to help teach introductory concepts in statistics, econometrics and optimization.  
 
 ## Installation
 
