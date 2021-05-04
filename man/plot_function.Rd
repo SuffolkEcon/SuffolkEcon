@@ -16,6 +16,8 @@ plot_function(
 )
 }
 \arguments{
+\item{.f}{a function (an object of class \code{function})}
+
 \item{lower}{an integer indicating the lower bound}
 
 \item{upper}{an integer indicating the upper bound}
@@ -23,8 +25,6 @@ plot_function(
 \item{optimize}{optimize the function and plot the optimum and FOC (defaults to FALSE). If TRUE it defaults to finding the global minimum. Set \code{maximum = TRUE} to find the global maximum.}
 
 \item{roots}{find and plot the roots over the given domain (defaults to FALSE)}
-
-\item{fun}{an object of class \code{function}}
 
 \item{maximize}{if \code{optimize = TRUE} find the maximum (defaults to FALSE and finds the minimum)}
 }
