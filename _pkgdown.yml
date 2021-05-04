@@ -1,0 +1,29 @@
+figures:
+   dev: grDevices::png
+template:
+  params:
+    bootswatch: cosmo
+reference:
+- title: One-line simulations
+  desc:
+- contents:
+  - flip_coin
+  - roll_die
+  - what_if
+  - plot_ols
+- title: Optimization
+  desc:
+- contents:
+  - plot_function
+- title: Distributions and Probabilities
+  desc:
+- contents:
+  - plot_distribution
+  - plot_probability
+  - plot_t_value
+- title: Data
+  desc:
+- contents:
+  - nhanes
+  - penguins
+  - hprice

@@ -1,0 +1,23 @@
+Package: SuffolkEcon
+Type: Package
+Title: Econ @ Suffolk University
+Version: 0.1.0
+Author: The Economics Department at Suffolk University
+Maintainer: Lawrence R. De Geest <ldegeest@suffolk.edu>
+Description: 
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Depends: 
+    R (>= 3.6),
+    dplyr,
+    ggplot2,
+    stringr,
+    patchwork,
+    rlang,
+    rootSolve
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+RoxygenNote: 7.1.1
