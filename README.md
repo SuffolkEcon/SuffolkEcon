@@ -42,7 +42,7 @@ This package is very much a work in progress, so contributions and bug reports a
 
 ## Acknowledgements
 
-This website was funded by a grant from the [Center for Teaching and Scholarly Excellence](https://www.suffolk.edu/academics/research-at-suffolk/center-for-teaching-scholarly-excellence) at Suffolk University.
+This package was funded by a grant from the [Center for Teaching and Scholarly Excellence](https://www.suffolk.edu/academics/research-at-suffolk/center-for-teaching-scholarly-excellence) at Suffolk University.
 
 ## License
 
