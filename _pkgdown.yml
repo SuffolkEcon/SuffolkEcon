@@ -3,6 +3,17 @@ figures:
 template:
   params:
     bootswatch: cosmo
+authors:
+  Lawrence R. De Geest:
+    href: https://lrdegeest.github.io/
+home:
+  links:
+  - text: Browse source code
+    href: https://github.com/SuffolkEcon/SuffolkEcon
+  - text: Report a bug
+    href: https://github.com/SuffolkEcon/SuffolkEcon/issues
+  - text: Browse the SuffolkEcon homepage 
+    href: https://suffolkecon.github.io/
 reference:
 - title: One-line simulations
   desc:

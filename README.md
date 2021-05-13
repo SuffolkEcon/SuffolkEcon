@@ -38,7 +38,7 @@ In the spirit of fitting into the greater package network, `SuffolkEcon` is buil
 
 ## Contributing
 
-This package is very much a work in progress, so contributions and bug reports are welcome. Drop us a line at ldegeest [at] suffolk [dot] edu.
+This package is very much a work in progress, so contributions and bug reports are welcome. Drop us a line at ldegeest [at] suffolk [dot] edu, or report a bug on [GitHub](https://github.com/SuffolkEcon/SuffolkEcon/issues).
 
 ## Acknowledgements
 

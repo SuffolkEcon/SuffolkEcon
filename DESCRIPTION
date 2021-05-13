@@ -2,7 +2,7 @@ Package: SuffolkEcon
 Type: Package
 Title: Econ @ Suffolk University
 Version: 0.1.0
-Author: The Economics Department at Suffolk University
+Author: Lawrence R. De Geest <ldegeest@suffolk.edu>
 Maintainer: Lawrence R. De Geest <ldegeest@suffolk.edu>
 Description: 
 License: MIT + file LICENSE
