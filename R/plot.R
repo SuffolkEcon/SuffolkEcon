@@ -8,7 +8,7 @@
 #' @param optimize optimize the function and plot the optimum and FOC (defaults to FALSE). If TRUE it defaults to finding the global minimum. Set \code{maximum = TRUE} to find the global maximum.
 #' @param maximize if \code{optimize = TRUE} find the maximum (defaults to FALSE and finds the minimum)
 #' @param roots find and plot the roots over the given domain (defaults to FALSE)
-#' @param optim use \code{optim()} to find optima (defaults to FALSE)
+#' @param optim use \code{optim()} to find optima (defaults to FALSE and uses \code{optimize()} which only implements Brent optimization)
 #' @param ... additional arguments passed to \code{optim()} if \code{optim = TRUE}
 #' @return \code{ggplot} object
 #' @examples

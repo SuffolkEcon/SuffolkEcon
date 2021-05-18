@@ -27,7 +27,7 @@ plot_function(
 
 \item{roots}{find and plot the roots over the given domain (defaults to FALSE)}
 
-\item{optim}{use \code{optim()} to find optima (defaults to FALSE)}
+\item{optim}{use \code{optim()} to find optima (defaults to FALSE and uses \code{optimize()} which only implements Brent optimization)}
 
 \item{...}{additional arguments passed to \code{optim()} if \code{optim = TRUE}}
 
