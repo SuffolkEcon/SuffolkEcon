@@ -2,15 +2,18 @@
 #'
 #'
 #' @author Lawrence R. De Geest
-#' @param .f a function (an object of class \code{function})
+#' @param f a single-line function 
 #' @param lower an integer indicating the lower bound
 #' @param upper an integer indicating the upper bound
 #' @param optimize optimize the function and plot the optimum and FOC (defaults to FALSE). If TRUE it defaults to finding the global minimum. Set \code{maximum = TRUE} to find the global maximum.
 #' @param maximize if \code{optimize = TRUE} find the maximum (defaults to FALSE and finds the minimum)
 #' @param roots find and plot the roots over the given domain (defaults to FALSE)
+#' @param optim use \code{optim()} to find optima (defaults to FALSE)
+#' @param ... additional arguments passed to \code{optim()} if \code{optim = TRUE}
 #' @return \code{ggplot} object
 #' @examples
 #' # declare some function
+#' ## right now the function needs to be declared on a single line
 #' f = function(x) -x^2 + 10*x
 #' # plot the function over the domain x = {0, ..., 10}
 #' plot_function(f, lower = 0, upper = 10)
@@ -19,7 +22,7 @@
 #' plot_function(f, lower = 0, upper = 10, optimize = TRUE, maximum = TRUE)
 #'
 #' # show that the optimal point occurs where the derivative is zero (i.e., the first-order condition):
-#' plot_function(f, lower = 0, upper = 10, derivative = TRUE, optimize = TRUE)
+#' plot_function(f, lower = 0, upper = 10, derivative = TRUE, roots = TRUE)
 #'
 #' # you can also define an anonymous function (i.e., define a function on the fly *inside* `plot_function`):
 #' plot_function(function(x) sin(x) + sin(3*x) + cos(3*x), lower = 0, upper = 6)
@@ -27,20 +30,22 @@
 #' # and show all roots over the domain:
 #' plot_function(function(x) sin(x) + sin(3*x) + cos(3*x), lower = 0, upper = 6, roots = TRUE)
 #'
-#' # plot_function uses `optim()` to find optima, and it can struggle to find them for messy functions:
+#' # plot_function uses uses `optimize()` by default, which implements Brent optimization. 
+#' # It can struggle to find local optima for messy functions.
+#' # For instance, it misses the local optimum:
 #' plot_function(function(x) sin(x) + sin(3*x) + cos(3*x), lower = 0, upper = 6, optimize = TRUE)
 #'
-#' # but you can adjust the starting value `par` (from `optim`) to get better results:
-#' plot_function(function(x) sin(x) + sin(3*x) + cos(3*x), lower = 0, upper = 6, optimize = TRUE, par = 5)
+#' # you can switch to `optim()` and then set the starting value `par` (from `optim`) to get better results:
+#' plot_function(function(x) sin(x) + sin(3*x) + cos(3*x), lower = 0, upper = 6, optimize = TRUE, optim = TRUE, par = 5)
 #'
 #' # since `plot_function` returns a ggplot object you can add ggplot stuff (e.g., change the theme, the titles, etc.)
-#' plot_function(function(x) sin(x) + sin(3*x) + cos(3*x), lower = 0, upper = 6, optimize = TRUE, par = 5) +
+#' plot_function(function(x) sin(x) + sin(3*x) + cos(3*x), lower = 0, upper = 6) +
 #'     theme_minimal() +
 #'     labs(subtitle = "the subtitle", title = "the title")
 #' @export
-plot_function = function(.f, lower, upper, derivative = FALSE, optimize = FALSE, maximum = FALSE, roots = FALSE, ...) {
+plot_function = function(f, lower, upper, derivative = FALSE, optimize = FALSE, maximum = FALSE, roots = FALSE, optim = FALSE, ...) {
   # sanity checks
-  if(length(formals(.f))>1) stop("plot_function can only be used with functions of one argument", call. = FALSE)
+  if(length(formals(f))>1) stop("plot_function can only be used with functions of one argument", call. = FALSE)
   if(lower > upper) stop("Your lower bound is greater than the upper bound!", call. = FALSE)
   # make sure the function actually works (evaluates without error) with some random number within the range
   fun_works = rlang::with_handlers(
@@ -49,7 +54,7 @@ plot_function = function(.f, lower, upper, derivative = FALSE, optimize = FALSE,
         i = "Make sure you only specified a function with one argument",
         i = "And make sure the function only handles a numerical argument",
         i = "e.g. `function(x) -x^2 + 10*x`")),
-    .f(runif(n = 1, min = lower, max = upper))
+    f(runif(n = 1, min = lower, max = upper))
   )
   data = data.frame(x = seq(lower, upper, 0.1))
   l = list(...) # capture the dots
@@ -60,20 +65,27 @@ plot_function = function(.f, lower, upper, derivative = FALSE, optimize = FALSE,
   ## could add more stuff here...
   if(!derivative){
     p = ggplot(data = data, aes(x=x)) +
-      stat_function(fun=.f, size = 1, color = l$color)  +
-      labs(x = bquote(italic(x)), y = bquote(italic('f(x)')), title =  parse(text = paste0("f(x) == ", deparse(.f)[2]))) # note: parse() returns an expression()
+      stat_function(fun=f, size = 1, color = l$color)  +
+      labs(x = bquote(italic(x)), y = bquote(italic('f(x)')), title =  parse(text = paste0("f(x) == ", deparse(f)[2]))) # note: parse() returns an expression()
     if(optimize) {
-      # need error handling here?
-      if(is.null(l$par)) l$par = 1
-      if(is.null(l$method)) l$method = "L-BFGS-B"
-      if(maximum) control=list(fnscale=-1) else control = list(fnscale=1)
-      if(l$method %in% c("L-BFGS-B", "Brent")){
-        optimum = optim(par = l$par, fn = .f, method = l$method, control = control, lower = lower, upper = upper)
-      } else{
-        optimum = optim(par = l$par, fn = .f, method = l$method, control = control)
+      if(optim){
+        # use optim() to do optimization
+        # need error handling here?
+        if(is.null(l$par)) l$par = 1
+        if(is.null(l$method)) l$method = "L-BFGS-B"
+        if(maximum) control=list(fnscale=-1) else control = list(fnscale=1)
+        if(l$method %in% c("L-BFGS-B", "Brent")){
+          optimum = optim(par = l$par, fn = f, method = l$method, control = control, lower = lower, upper = upper)
+        } else{
+          optimum = optim(par = l$par, fn = f, method = l$method, control = control)
+        }
+        y = optimum$value
+        x_optim = optimum$par
+      } else{ # use optimize() which implements Brent
+        optimum = optimize(f = f, lower = lower, upper = upper, maximum = maximum)
+        y = optimum[[2]]
+        x_optim = optimum[[1]]
       }
-      y = optimum$value
-      x_optim = optimum$par
       step = 0.1*(max(data$x) - min(data$x)) # segment is 10% of the range
       opt = ifelse(maximum, 'Maximum:', 'Minimum:')
       subtitle = bquote(.(opt)~italic('x =')~.(round(x_optim,2))~','~italic('f(x) =')~.(round(y,2)))
@@ -84,21 +96,21 @@ plot_function = function(.f, lower, upper, derivative = FALSE, optimize = FALSE,
     }
     if(roots){
       # need error handling here?
-      all_roots = rootSolve::uniroot.all(.f, interval = c(min(data$x), max(data$x)))
+      all_roots = rootSolve::uniroot.all(f, interval = c(min(data$x), max(data$x)))
       all_roots_df = data.frame(x=all_roots, y=0)
       p = p +
         geom_hline(yintercept = 0, linetype = 'dotted') +
         geom_point(data = all_roots_df, aes(x = x, y= y), size = 3.5, fill = l$optim_fill, color = l$optim_color)
     }
   } else{ # plot the derivative
-    fprime = Deriv::Deriv(.f) # going this route instead of numDeriv::grad, so I can get a function fprime and then root it
+    fprime = Deriv::Deriv(f) # going this route instead of numDeriv::grad, so I can get a function fprime and then root it
     data = mutate(data, derivative = fprime(x))
     p = ggplot(data = data, aes(x=x, y = derivative)) +
       geom_hline(yintercept = 0, color = l$hline_color) +
-      geom_line(size = 1, color = l$color) #+
-      labs(x = bquote(italic(x)), y = expression(over(df, dx)),
-           subtitle = "First derivative",
-           title =  parse(text = paste0("f(x) == ", deparse(.f)[2]))) +
+      geom_line(size = 1, color = l$color) +
+    labs(x = bquote(italic(x)), y = expression(over(df, dx)),
+         subtitle = "First derivative",
+         title =  parse(text = paste0("f(x) == ", deparse(f)[2]))) +
       theme(axis.title.y  = element_text(angle = 0, vjust = 0.5))
     if(optimize || roots || maximum){
       all_roots = rootSolve::uniroot.all(fprime, interval = c(min(data$x), max(data$x)))

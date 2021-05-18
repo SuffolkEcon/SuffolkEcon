@@ -5,18 +5,19 @@
 \title{Plot a one-dimensional, user-defined function}
 \usage{
 plot_function(
-  .f,
+  f,
   lower,
   upper,
   derivative = FALSE,
   optimize = FALSE,
   maximum = FALSE,
   roots = FALSE,
+  optim = FALSE,
   ...
 )
 }
 \arguments{
-\item{.f}{a function (an object of class \code{function})}
+\item{f}{a single-line function}
 
 \item{lower}{an integer indicating the lower bound}
 
@@ -25,6 +26,10 @@ plot_function(
 \item{optimize}{optimize the function and plot the optimum and FOC (defaults to FALSE). If TRUE it defaults to finding the global minimum. Set \code{maximum = TRUE} to find the global maximum.}
 
 \item{roots}{find and plot the roots over the given domain (defaults to FALSE)}
+
+\item{optim}{use \code{optim()} to find optima (defaults to FALSE)}
+
+\item{...}{additional arguments passed to \code{optim()} if \code{optim = TRUE}}
 
 \item{maximize}{if \code{optimize = TRUE} find the maximum (defaults to FALSE and finds the minimum)}
 }
@@ -36,6 +41,7 @@ Plot a one-dimensional, user-defined function
 }
 \examples{
 # declare some function
+## right now the function needs to be declared on a single line
 f = function(x) -x^2 + 10*x
 # plot the function over the domain x = {0, ..., 10}
 plot_function(f, lower = 0, upper = 10)
@@ -44,7 +50,7 @@ plot_function(f, lower = 0, upper = 10)
 plot_function(f, lower = 0, upper = 10, optimize = TRUE, maximum = TRUE)
 
 # show that the optimal point occurs where the derivative is zero (i.e., the first-order condition):
-plot_function(f, lower = 0, upper = 10, derivative = TRUE, optimize = TRUE)
+plot_function(f, lower = 0, upper = 10, derivative = TRUE, roots = TRUE)
 
 # you can also define an anonymous function (i.e., define a function on the fly *inside* `plot_function`):
 plot_function(function(x) sin(x) + sin(3*x) + cos(3*x), lower = 0, upper = 6)
@@ -52,14 +58,16 @@ plot_function(function(x) sin(x) + sin(3*x) + cos(3*x), lower = 0, upper = 6)
 # and show all roots over the domain:
 plot_function(function(x) sin(x) + sin(3*x) + cos(3*x), lower = 0, upper = 6, roots = TRUE)
 
-# plot_function uses `optim()` to find optima, and it can struggle to find them for messy functions:
+# plot_function uses uses `optimize()` by default, which implements Brent optimization. 
+# It can struggle to find local optima for messy functions.
+# For instance, it misses the local optimum:
 plot_function(function(x) sin(x) + sin(3*x) + cos(3*x), lower = 0, upper = 6, optimize = TRUE)
 
-# but you can adjust the starting value `par` (from `optim`) to get better results:
-plot_function(function(x) sin(x) + sin(3*x) + cos(3*x), lower = 0, upper = 6, optimize = TRUE, par = 5)
+# you can switch to `optim()` and then set the starting value `par` (from `optim`) to get better results:
+plot_function(function(x) sin(x) + sin(3*x) + cos(3*x), lower = 0, upper = 6, optimize = TRUE, optim = TRUE, par = 5)
 
 # since `plot_function` returns a ggplot object you can add ggplot stuff (e.g., change the theme, the titles, etc.)
-plot_function(function(x) sin(x) + sin(3*x) + cos(3*x), lower = 0, upper = 6, optimize = TRUE, par = 5) +
+plot_function(function(x) sin(x) + sin(3*x) + cos(3*x), lower = 0, upper = 6) +
     theme_minimal() +
     labs(subtitle = "the subtitle", title = "the title")
 }
